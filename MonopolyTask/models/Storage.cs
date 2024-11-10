@@ -1,34 +1,27 @@
-namespace MonopolyTask;
+namespace MonopolyTask.Models;
 
 public class Storage
 {
-    private List<Pallet> _pallets;
+    public List<Pallet> Pallets { get; set; } = new List<Pallet>();
 
-    public Storage()
-    {
-        _pallets = new List<Pallet>();
-    }
-
-    // Добавить паллету
+    // Добавление паллеты и коробок
     public void AddPallet(Pallet pallet)
     {
-        _pallets.Add(pallet);
+        Pallets.Add(pallet);
     }
 
     // Группировка паллет по сроку годности
     public IEnumerable<IGrouping<DateTime, Pallet>> GroupByExpiryDate()
     {
-        return _pallets
-            .GroupBy(p => p.ExpiryDate)
-            .OrderBy(g => g.Key);  // Сортируем по сроку годности
+        return Pallets.GroupBy(p => p.ExpiryDate).OrderBy(g => g.Key);
     }
 
-    // Получить 3 паллеты с наибольшим сроком годности, отсортированные по объему
+    // Получить топ 3 паллет с наибольшим сроком годности
     public List<Pallet> GetTop3PalletsByExpiryDate()
     {
-        return _pallets
-            .OrderByDescending(p => p.Boxes.Max(b => b.ExpiryDate))  // Сортируем по самой поздней коробке
-            .ThenBy(p => p.Volume)  // Затем по объему
+        return Pallets
+            .OrderByDescending(p => p.Boxes.Max(b => b.ExpiryDate)) // Сортируем по самой поздней коробке
+            .ThenBy(p => p.Volume) // Затем по объему
             .Take(3)
             .ToList();
     }
@@ -42,9 +35,11 @@ public class Storage
         {
             Console.WriteLine($"Группа по сроку годности: {group.Key.ToShortDateString()}");
 
-            foreach (var pallet in group.OrderBy(p => p.TotalWeight))  // Сортируем по весу
+            foreach (var pallet in group.OrderBy(p => p.TotalWeight)) // Сортируем по весу
             {
-                Console.WriteLine($"Паллета ID: {pallet.Id}, Вес: {pallet.TotalWeight} кг, Объем: {pallet.Volume} м³");
+                Console.WriteLine(
+                    $"Паллета ID: {pallet.Id}, Вес: {pallet.TotalWeight} кг, Объем: {pallet.Volume} м в кубе"
+                );
             }
         }
     }
@@ -58,7 +53,9 @@ public class Storage
 
         foreach (var pallet in topPallets)
         {
-            Console.WriteLine($"Паллета ID: {pallet.Id}, Вес: {pallet.TotalWeight} кг, Объем: {pallet.Volume} м³, Срок годности: {pallet.ExpiryDate.ToShortDateString()}");
+            Console.WriteLine(
+                $"Паллета ID: {pallet.Id}, Вес: {pallet.TotalWeight} кг, Объем: {pallet.Volume} м в кубе, Срок годности: {pallet.ExpiryDate.ToShortDateString()}"
+            );
         }
     }
 }
