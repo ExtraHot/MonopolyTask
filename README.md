@@ -111,5 +111,13 @@
 
 ```
 
+### Запуск тестов
+
+```
+cd MonopolyTask.Tests
+dotnet test
+```
+
+
 
 
